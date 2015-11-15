@@ -10,7 +10,8 @@ class cvxLexer(object):
 
     # List of token names.
     tokens = [
-        'NUMBER',
+        'INT',
+        'FLOAT',
         #arithmetic operators
         'PLUS', 'MINUS', 'TIMES', 'DIVIDE',
         #punctuators
@@ -50,13 +51,15 @@ class cvxLexer(object):
         r'\%.*'
         return t
 
-    # A regular expression rule with some action code
-    def t_NUMBER(self, t):
-        r'\d+(\.\d+)?'
-        if ('.' in t.value):
-            t.value = float(t.value)
-        else:
-            t.value = int(t.value)
+    #keep defination of FLOAT above that of INT (precedence)
+    def t_FLOAT(t):
+        r'(\d*)?[.]\d+'
+        t.value = float(t.value)
+        return t
+
+    def t_INT(t):
+        r'\d+'
+        t.value = int(t.value)
         return t
 
     # Define a rule so we can track line numbers
